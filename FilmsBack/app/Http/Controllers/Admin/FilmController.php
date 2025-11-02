@@ -38,7 +38,6 @@ class FilmController extends Controller
         $newFilm->trailer      = $data['trailer'];
         $newFilm->release_date = $data['release_date'];
         $newFilm->rating       = $data['rating'];
-        $newFilm->director     = $data['director'];
         $newFilm->cast         = $data['cast'];
         $newFilm->save();
 
@@ -73,7 +72,6 @@ class FilmController extends Controller
         $film->trailer      = $data['trailer'];
         $film->release_date = $data['release_date'];
         $film->rating       = $data['rating'];
-        $film->director     = $data['director'];
         $film->cast         = $data['cast'];
         $film->save();
 

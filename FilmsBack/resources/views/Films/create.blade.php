@@ -25,10 +25,6 @@
             <input type="number" step="1" name="rating" id="rating">
         </div>
         <div>
-            <label for="director">Director</label>
-            <input type="text" name="director" id="director">
-        </div>
-        <div>
             <label for="cast">Cast</label>
             <input type="text" name="cast" id="cast">
         </div>

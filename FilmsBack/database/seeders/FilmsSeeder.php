@@ -20,10 +20,8 @@ class FilmsSeeder extends Seeder
             $film->description  = $faker->text(100);
             $film->poster       = $faker->imageUrl(640, 480, 'movies', true);
             $film->trailer      = $faker->url();
-            $film->genre        = $faker->word();
             $film->release_date = $faker->date('Y-m-d');
             $film->rating       = $faker->numberBetween(1, 10);
-            $film->director     = $faker->name();
             $film->cast         = $faker->name();
             $film->save();
         }

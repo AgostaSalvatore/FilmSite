@@ -11,10 +11,8 @@
     <p><b>Description:</b> {{ $film->description }}</p>
     <p><b>Poster:</b> {{ $film->poster }}</p>
     <p><b>Trailer:</b> {{ $film->trailer }}</p>
-    <p><b>Genre:</b> {{ $film->genre }}</p>
     <p><b>Release Date:</b> {{ $film->release_date }}</p>
     <p><b>Rating:</b> {{ $film->rating }}</p>
-    <p><b>Director:</b> {{ $film->director }}</p>
     <p><b>Cast:</b> {{ $film->cast }}</p>
     
     <!-- Modal trigger button -->

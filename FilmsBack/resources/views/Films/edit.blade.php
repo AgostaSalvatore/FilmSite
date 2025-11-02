@@ -25,10 +25,6 @@
             <input type="number" step="1" name="rating" id="rating" value="{{ $film->rating }}">
         </div>
         <div>
-            <label for="director">Director</label>
-            <input type="text" name="director" id="director" value="{{ $film->director }}">
-        </div>
-        <div>
             <label for="cast">Cast</label>
             <input type="text" name="cast" id="cast" value="{{ $film->cast }}">
         </div>
