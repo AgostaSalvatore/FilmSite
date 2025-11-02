@@ -10,6 +10,7 @@
     <p><b>Title:</b> {{ $film->title }}</p>
     <p><b>Description:</b> {{ $film->description }}</p>
     <p><b>Poster:</b> {{ $film->poster }}</p>
+    <p><b>Director:</b> {{ $film->director->name }} {{ $film->director->surname }}</p>
     <p><b>Trailer:</b> {{ $film->trailer }}</p>
     <p><b>Release Date:</b> {{ $film->release_date }}</p>
     <p><b>Rating:</b> {{ $film->rating }}</p>
