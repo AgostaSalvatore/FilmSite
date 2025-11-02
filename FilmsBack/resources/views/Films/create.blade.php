@@ -4,9 +4,10 @@
 
 
 @section('content')
+<div class="container">
     <h1>Create Film</h1>
     <form action="{{ route('films.store') }}" method="POST">
-        @csrf
+        @csrf  
         <div>
             <label for="title">Title</label>
             <input type="text" name="title" id="title">
@@ -35,4 +36,5 @@
             <button type="submit">Create Film</button>
         </div>
     </form>
+</div>
 @endsection
