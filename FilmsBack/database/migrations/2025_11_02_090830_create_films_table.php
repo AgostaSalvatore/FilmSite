@@ -14,9 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->string('poster');
-            $table->string('trailer');
-            $table->string('genre');
+            $table->string('poster')->nullable();
+            $table->string('trailer')->nullable();
+            $table->string('genre')->nullable();
             $table->date('release_date');
             $table->integer('rating');
             $table->string('director');
