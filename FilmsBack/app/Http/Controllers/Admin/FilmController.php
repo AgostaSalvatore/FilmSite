@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Director;
 use App\Models\Film;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,8 @@ class FilmController extends Controller
      */
     public function create()
     {
-        return view('films.create');
+        $director = Director::all();
+        return view('films.create', compact('director'));
     }
 
     /**
@@ -49,7 +51,7 @@ class FilmController extends Controller
      */
     public function show(Film $film)
     {
-        return view('films.show', compact('film'));
+        return view('films.show', compact('film', 'director'));
     }
 
     /**
@@ -57,7 +59,8 @@ class FilmController extends Controller
      */
     public function edit(Film $film)
     {
-        return view('films.edit', compact('film'));
+        $director = Director::all();
+        return view('films.edit', compact('film', 'director'));
     }
 
     /**

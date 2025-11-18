@@ -10,4 +10,9 @@ class Film extends Model
     {
         return $this->belongsTo(Director::class);
     }
+
+    public function genres()
+    {
+        return $this->belongsToMany(Genre::class);
+    }
 }
