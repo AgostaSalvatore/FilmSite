@@ -1,1 +1,13 @@
-@import '~bootstrap/scss/bootstrap'
+@import '~bootstrap/scss/bootstrap';
+
+// Centrare il contenuto principale
+main {
+    max-width: 80vw;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+// Tabella responsive
+.table-responsive {
+    margin: 0 auto;
+}
