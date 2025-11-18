@@ -31,6 +31,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('films.create') }}">Aggiungi Film</a>
                         </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('directors.index') }}">Gestisci Director</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('genres.index') }}">Gestisci Genres</a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.index') }}">Area Admin</a>
                         </li>
@@ -52,7 +61,7 @@
         @yield('content')
     </main>
 
-    <footer class="bg-dark text-light py-4 mt-5">
+    <footer class="fixed-bottom bg-dark text-light py-4">
         <div class="container text-center">
             <p>&copy; {{ date('Y') }} FilmSite. Tutti i diritti riservati.</p>
         </div>

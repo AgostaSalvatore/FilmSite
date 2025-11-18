@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\DirectorController;
 use App\Http\Controllers\Admin\FilmController;
+use App\Http\Controllers\Admin\GenreController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,5 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::resource('/films', FilmController::class);
+Route::resource('/genres', GenreController::class);
+Route::resource('/directors', DirectorController::class);
 
 require __DIR__ . '/auth.php';

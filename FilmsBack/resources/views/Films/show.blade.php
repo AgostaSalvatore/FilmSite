@@ -25,6 +25,8 @@
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-film">
         {{__('Elimina')}}
     </button>
+    
+    <a href="{{ route('films.edit', $film) }}" class="btn btn-primary">Modifica</a>
 
     <!-- Modal Body -->
     <div class="modal fade" id="delete-film" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="delete-film-label" aria-hidden="true">

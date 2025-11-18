@@ -25,6 +25,11 @@ class FilmsSeeder extends Seeder
             $film->rating       = $faker->numberBetween(1, 10);
             $film->cast         = $faker->name();
             $film->save();
+
+            // Associa da 1 a 3 genres casuali
+            $genreIds = range(1, 7);  // Assumendo che ci siano 7 genres
+            shuffle($genreIds);  // mescola gli id
+            $film->genres()->attach(array_slice($genreIds, 0, rand(1, 3)));  // associa 1, 2 o 3 genres casuali
         }
     }
 }

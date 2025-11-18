@@ -17,6 +17,14 @@
             <textarea name="description" id="description"></textarea>
         </div>
         <div>
+            <label for="poster">Poster URL</label>
+            <input type="text" name="poster" id="poster">
+        </div>
+        <div>
+            <label for="trailer">Trailer URL</label>
+            <input type="text" name="trailer" id="trailer">
+        </div>
+        <div>
             <label for="director_id">Director</label>
             <select name="director_id" id="director_id">
                 <option value="">Seleziona un Regista</option>
@@ -36,6 +44,15 @@
         <div>
             <label for="cast">Cast</label>
             <input type="text" name="cast" id="cast">
+        </div>
+        <div>
+            <label>Genres</label>
+            @foreach($genres as $genre)
+                <div>
+                    <input type="checkbox" name="genres[]" id="genre_{{ $genre->id }}" value="{{ $genre->id }}">
+                    <label for="genre_{{ $genre->id }}">{{ $genre->name }}</label>
+                </div>
+            @endforeach
         </div>
         <div>
             <button type="submit">Create Film</button>

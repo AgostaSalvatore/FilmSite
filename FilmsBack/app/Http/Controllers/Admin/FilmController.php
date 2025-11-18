@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Director;
 use App\Models\Film;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 
 class FilmController extends Controller
@@ -24,7 +25,8 @@ class FilmController extends Controller
     public function create()
     {
         $directors = Director::all();
-        return view('films.create', compact('director'));
+        $genres    = Genre::all();
+        return view('films.create', compact('directors', 'genres'));
     }
 
     /**
@@ -41,7 +43,13 @@ class FilmController extends Controller
         $newFilm->release_date = $data['release_date'];
         $newFilm->rating       = $data['rating'];
         $newFilm->cast         = $data['cast'];
+        $newFilm->director_id  = $data['director_id'];
         $newFilm->save();
+
+        // Associa i genres selezionati
+        if (isset($data['genres'])) {
+            $newFilm->genres()->attach($data['genres']);
+        }
 
         return redirect()->route('films.show', $newFilm);
     }
@@ -59,7 +67,9 @@ class FilmController extends Controller
      */
     public function edit(Film $film)
     {
-        return view('films.edit', compact('film'));
+        $directors = Director::all();
+        $genres    = Genre::all();
+        return view('films.edit', compact('film', 'directors', 'genres'));
     }
 
     /**
@@ -75,7 +85,13 @@ class FilmController extends Controller
         $film->release_date = $data['release_date'];
         $film->rating       = $data['rating'];
         $film->cast         = $data['cast'];
+        $film->director_id  = $data['director_id'];
         $film->save();
+
+        // Sincronizza i genres selezionati
+        if (isset($data['genres'])) {
+            $film->genres()->sync($data['genres']);
+        }
 
         return redirect()->route('films.show', $film);
     }
@@ -85,6 +101,10 @@ class FilmController extends Controller
      */
     public function destroy(Film $film)
     {
+        // Rimuovi prima le relazioni many-to-many con i genres
+        $film->genres()->detach();
+
+        // Poi elimina il film
         $film->delete();
 
         return redirect()->route('films.index');
