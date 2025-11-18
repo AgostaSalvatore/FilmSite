@@ -23,7 +23,7 @@ class FilmController extends Controller
      */
     public function create()
     {
-        $director = Director::all();
+        $directors = Director::all();
         return view('films.create', compact('director'));
     }
 
@@ -51,7 +51,7 @@ class FilmController extends Controller
      */
     public function show(Film $film)
     {
-        return view('films.show', compact('film', 'director'));
+        return view('films.show', compact('film'));
     }
 
     /**
@@ -59,8 +59,7 @@ class FilmController extends Controller
      */
     public function edit(Film $film)
     {
-        $director = Director::all();
-        return view('films.edit', compact('film', 'director'));
+        return view('films.edit', compact('film'));
     }
 
     /**

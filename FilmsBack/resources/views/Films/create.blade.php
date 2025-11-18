@@ -17,6 +17,15 @@
             <textarea name="description" id="description"></textarea>
         </div>
         <div>
+            <label for="director_id">Director</label>
+            <select name="director_id" id="director_id">
+                <option value="">Seleziona un Regista</option>
+                @foreach($directors as $director)
+                    <option value="{{ $director->id }}">{{ $director->name }} {{ $director->surname }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
             <label for="release_date">Release Date</label>
             <input type="date" name="release_date" id="release_date">
         </div>

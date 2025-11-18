@@ -15,6 +15,11 @@
     <p><b>Release Date:</b> {{ $film->release_date }}</p>
     <p><b>Rating:</b> {{ $film->rating }}</p>
     <p><b>Cast:</b> {{ $film->cast }}</p>
+    <p><b>Genres:</b> 
+        @foreach ($film->genres as $genre)
+            <span class="badge" style="background-color: {{ $genre->color }}">{{ $genre->name }}</span>
+        @endforeach
+    </p>
     
     <!-- Modal trigger button -->
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-film">
