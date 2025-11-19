@@ -61,7 +61,7 @@
         @yield('content')
     </main>
 
-    <footer class="fixed-bottom bg-dark text-light py-4">
+    <footer class="bg-dark text-light py-4">
         <div class="container text-center">
             <p>&copy; {{ date('Y') }} FilmSite. Tutti i diritti riservati.</p>
         </div>

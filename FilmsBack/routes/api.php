@@ -8,4 +8,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::apiResource('films', FilmController::class);
+// api controller index
+Route::get('films', [FilmController::class, 'index']);
+
+// api controller show
+Route::get('films/{film}', [FilmController::class, 'show']);

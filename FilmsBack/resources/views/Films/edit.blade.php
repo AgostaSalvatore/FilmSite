@@ -4,63 +4,102 @@
 
 
 @section('content')
-<div class="container">
-    <h1>Edit Film</h1>
-    <form action="{{ route('films.update', $film) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <div>
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title" value="{{ $film->title }}">
-        </div>
-        <div>
-            <label for="description">Description</label>
-            <textarea name="description" id="description">{{ $film->description }}</textarea>
-        </div>
-        <div>
-            <label for="poster">Poster URL</label>
-            <input type="text" name="poster" id="poster" value="{{ $film->poster }}">
-        </div>
-        <div>
-            <label for="trailer">Trailer URL</label>
-            <input type="text" name="trailer" id="trailer" value="{{ $film->trailer }}">
-        </div>
-        <div>
-            <label for="director_id">Director</label>
-            <select name="director_id" id="director_id">
-                <option value="">Seleziona un Regista</option>
-                @foreach($directors as $director)
-                    <option value="{{ $director->id }}" {{ $film->director_id == $director->id ? 'selected' : '' }}>
-                        {{ $director->name }} {{ $director->surname }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label for="release_date">Release Date</label>
-            <input type="date" name="release_date" id="release_date" value="{{ $film->release_date }}">
-        </div>
-        <div>
-            <label for="rating">Rating</label>
-            <input type="number" step="1" name="rating" id="rating" value="{{ $film->rating }}">
-        </div>
-        <div>
-            <label for="cast">Cast</label>
-            <input type="text" name="cast" id="cast" value="{{ $film->cast }}">
-        </div>
-        <div>
-            <label>Genres</label>
-            @foreach($genres as $genre)
-                <div>
-                    <input type="checkbox" name="genres[]" id="genre_{{ $genre->id }}" value="{{ $genre->id }}"
-                        {{ $film->genres->contains($genre->id) ? 'checked' : '' }}>
-                    <label for="genre_{{ $genre->id }}">{{ $genre->name }}</label>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Edit Film</h2>
                 </div>
-            @endforeach
+                <div class="card-body">
+                    <form action="{{ route('films.update', $film) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" id="title" value="{{ $film->title }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" name="description" id="description" rows="4">{{ $film->description }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="director_id" class="form-label">Director</label>
+                            <select class="form-select" name="director_id" id="director_id" required>
+                                <option value="">Seleziona un Regista</option>
+                                @foreach($directors as $director)
+                                    <option value="{{ $director->id }}" {{ $film->director_id == $director->id ? 'selected' : '' }}>
+                                        {{ $director->name }} {{ $director->surname }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="release_date" class="form-label">Release Date</label>
+                                <input type="date" class="form-control" name="release_date" id="release_date" value="{{ $film->release_date }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="rating" class="form-label">Rating</label>
+                                <input type="number" class="form-control" step="1" name="rating" id="rating" value="{{ $film->rating }}" min="0" max="10">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cast" class="form-label">Cast</label>
+                            <input type="text" class="form-control" name="cast" id="cast" value="{{ $film->cast }}" placeholder="Actor 1, Actor 2, Actor 3">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="trailer" class="form-label">Trailer URL</label>
+                            <input type="url" class="form-control" name="trailer" id="trailer" value="{{ $film->trailer }}" placeholder="https://...">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Genres</label>
+                            <div class="row">
+                                @foreach($genres as $genre)
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="genres[]" id="genre_{{ $genre->id }}" value="{{ $genre->id }}"
+                                                {{ $film->genres->contains($genre->id) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="genre_{{ $genre->id }}">
+                                                {{ $genre->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="poster" class="form-label">Poster Image</label>
+                            <input type="file" class="form-control" name="poster" id="poster" accept="image/*">
+                            @if($film->poster)
+                                <small class="text-muted">Current: 
+
+                                    <img 
+                                    src="{{ asset('storage/' . $film->poster) }}" 
+                                    alt="Poster" 
+                                    class="img-fluid"
+                                    style="max-width: 100px; max-height: 100px; margin: 10px 10px;"
+                                    >
+                                </small>
+                            @endif
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Update Film</button>
+                            <a href="{{ route('films.show', $film) }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div>
-            <button type="submit">Update Film</button>
-        </div>
-    </form>
+    </div>
 </div>
 @endsection

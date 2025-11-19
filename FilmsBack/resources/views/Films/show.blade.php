@@ -7,9 +7,13 @@
     <div class="container">
 
     <h1>Dettaglio Film</h1>
+    @if ($film->poster)
+    <div id="post-image">
+        <img src="{{asset('storage/' . $film->poster)}}" alt="{{ $film->title }}">
+    </div>
+    @endif
     <p><b>Title:</b> {{ $film->title }}</p>
     <p><b>Description:</b> {{ $film->description }}</p>
-    <p><b>Poster:</b> {{ $film->poster }}</p>
     <p><b>Director:</b> {{ $film->director->name }} {{ $film->director->surname }}</p>
     <p><b>Trailer:</b> {{ $film->trailer }}</p>
     <p><b>Release Date:</b> {{ $film->release_date }}</p>

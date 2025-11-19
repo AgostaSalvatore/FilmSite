@@ -18,7 +18,6 @@ class FilmsSeeder extends Seeder
             $film               = new Film();
             $film->title        = $faker->sentence(3);
             $film->description  = $faker->text(100);
-            $film->poster       = $faker->imageUrl(640, 480, 'movies', true);
             $film->director_id  = rand(1, 10);
             $film->trailer      = $faker->url();
             $film->release_date = $faker->date('Y-m-d');

@@ -7,6 +7,7 @@ use App\Models\Director;
 use App\Models\Film;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FilmController extends Controller
 {
@@ -44,6 +45,12 @@ class FilmController extends Controller
         $newFilm->rating       = $data['rating'];
         $newFilm->cast         = $data['cast'];
         $newFilm->director_id  = $data['director_id'];
+
+        if (array_key_exists('poster', $data)) {
+            $img_url         = Storage::put('poster', $data['poster']);
+            $newFilm->poster = $img_url;
+        }
+
         $newFilm->save();
 
         // Associa i genres selezionati
@@ -86,6 +93,18 @@ class FilmController extends Controller
         $film->rating       = $data['rating'];
         $film->cast         = $data['cast'];
         $film->director_id  = $data['director_id'];
+
+        if (array_key_exists('poster', $data)) {
+            // eliminare l'immagine precedente
+            Storage::delete($film->poster);
+
+            // carico la nuova immagine
+            $img_url = Storage::put('poster', $data['poster']);
+
+            // aggiorno il db
+            $film->poster = $img_url;
+        }
+
         $film->save();
 
         // Sincronizza i genres selezionati
@@ -106,6 +125,10 @@ class FilmController extends Controller
 
         // Poi elimina il film
         $film->delete();
+
+        if ($film->poster) {
+            Storage::delete($film->poster);
+        }
 
         return redirect()->route('films.index');
     }

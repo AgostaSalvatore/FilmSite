@@ -23,10 +23,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::resource('/films', FilmController::class);
+    Route::resource('/genres', GenreController::class);
+    Route::resource('/directors', DirectorController::class);
 });
-
-Route::resource('/films', FilmController::class);
-Route::resource('/genres', GenreController::class);
-Route::resource('/directors', DirectorController::class);
 
 require __DIR__ . '/auth.php';

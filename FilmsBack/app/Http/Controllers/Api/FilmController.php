@@ -10,7 +10,9 @@ class FilmController extends Controller
 {
     public function index()
     {
+        // collect all videogames
         $films = Film::all();
+
         return response()->json([
             'success' => true,
             'data'    => $films
