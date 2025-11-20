@@ -29,13 +29,8 @@
                     </li>
                     @auth
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('films.create') }}">Aggiungi Film</a>
-                        </li>
-                        
-                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('directors.index') }}">Gestisci Director</a>
                         </li>
-                        
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('genres.index') }}">Gestisci Genres</a>
                         </li>
@@ -58,6 +53,20 @@
     </nav>
 
     <main class="py-4">
+        <div class="container">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </div>
         @yield('content')
     </main>
 

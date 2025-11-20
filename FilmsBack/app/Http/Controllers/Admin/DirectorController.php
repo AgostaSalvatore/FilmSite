@@ -32,11 +32,10 @@ class DirectorController extends Controller
     {
         $data = $request->all();
 
-        $newDirector                = new Director();
-        $newDirector->name          = $data['name'];
-        $newDirector->surname       = $data['surname'];
-        $newDirector->date_of_birth = $data['date_of_birth'];
-        $newDirector->nationality   = $data['nationality'];
+        $newDirector              = new Director();
+        $newDirector->name        = $data['name'];
+        $newDirector->surname     = $data['surname'];
+        $newDirector->nationality = $data['nationality'];
         $newDirector->save();
 
         return redirect()->route('directors.index');
@@ -65,10 +64,9 @@ class DirectorController extends Controller
     {
         $data = $request->all();
 
-        $director->name          = $data['name'];
-        $director->surname       = $data['surname'];
-        $director->date_of_birth = $data['date_of_birth'];
-        $director->nationality   = $data['nationality'];
+        $director->name        = $data['name'];
+        $director->surname     = $data['surname'];
+        $director->nationality = $data['nationality'];
         $director->save();
 
         return redirect()->route('directors.index');
