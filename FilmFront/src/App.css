@@ -1,3 +1,56 @@
 body {
     background-color: #000;
 }
+
+h1.split-parent {
+    font-size: 8rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
+.catalog-button {
+    background: linear-gradient(135deg, #5227FF 0%, #FF9FFC 100%);
+    border: none;
+    padding: 1.2rem 3rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(82, 39, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.catalog-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(82, 39, 255, 0.5);
+}
+
+.catalog-button:active {
+    transform: translateY(-1px);
+}
+
+.catalog-button .button-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    h1.split-parent {
+        font-size: 3.5rem;
+    }
+    
+    .catalog-button {
+        padding: 1rem 2rem;
+    }
+    
+    .catalog-button .button-text {
+        font-size: 1.2rem;
+    }
+}

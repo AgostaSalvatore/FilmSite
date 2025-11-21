@@ -1,14 +1,12 @@
-import { VscHome, VscArchive, VscAccount, VscSettingsGear } from "react-icons/vsc";
-import LiquidEther from "./components/Background/LiquidEther";
+import LiquidEther from "./components/LandingPage/LiquidEther";
+import SplitText from "./components/LandingPage/SplitText";
 import "./App.css";
 
 function App() {
-  const dockItems = [
-    { icon: <VscHome size={18} color="white" />, label: 'Home', onClick: () => alert('Home!') },
-    { icon: <VscArchive size={18} color="white" />, label: 'Archive', onClick: () => alert('Archive!') },
-    { icon: <VscAccount size={18} color="white" />, label: 'Profile', onClick: () => alert('Profile!') },
-    { icon: <VscSettingsGear size={18} color="white" />, label: 'Settings', onClick: () => alert('Settings!') },
-  ];
+
+  const handleAnimationComplete = () => {
+    console.log('All letters have animated!');
+  };
   return (
     <>
       <div style={{ width: '100%', height: '100vh', position: 'relative', overflow: 'hidden' }}>
@@ -35,8 +33,52 @@ function App() {
         </div>
 
         {/* Content Layer */}
-        <div style={{ position: 'relative', zIndex: 1, height: '100%', overflowY: 'auto', padding: '2rem' }}>
-          <h1 style={{ color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>FilmFront - Benvenuto!</h1>
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1,
+          pointerEvents: 'none',
+          width: '100%',
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '3rem'
+        }}>
+          <SplitText
+            text="Aura Cinema"
+            className="text-white"
+            delay={50}
+            duration={0.8}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 40 }}
+            to={{ opacity: 1, y: 0 }}
+            textAlign="center"
+            tag="h1"
+            onLetterAnimationComplete={handleAnimationComplete}
+          />
+
+          <button
+            className="catalog-button"
+            style={{ pointerEvents: 'auto' }}
+            onClick={() => alert('Vai al catalogo!')}
+          >
+            <SplitText
+              text="Scopri il Catalogo"
+              className="button-text"
+              delay={30}
+              duration={0.6}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 20 }}
+              to={{ opacity: 1, y: 0 }}
+              textAlign="center"
+              tag="span"
+            />
+          </button>
         </div>
 
       </div>
