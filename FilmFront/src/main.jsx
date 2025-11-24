@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import FilmIndex from './FilmIndex.jsx'
+import FilmDetail from './components/FilmDetail.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -11,6 +12,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/films" element={<FilmIndex />} />
+        <Route path="/films/:id" element={<FilmDetail />} />
       </Routes>
     </Router>
   </StrictMode>,
