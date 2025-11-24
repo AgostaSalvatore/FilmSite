@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import LiquidEther from "./components/LandingPage/LiquidEther";
 import SplitText from "./components/LandingPage/SplitText";
 import "./App.css";
 
 function App() {
+  const navigate = useNavigate();
 
   const handleAnimationComplete = () => {
     console.log('All letters have animated!');
@@ -64,7 +66,7 @@ function App() {
           <button
             className="catalog-button"
             style={{ pointerEvents: 'auto' }}
-            onClick={() => alert('Vai al catalogo!')}
+            onClick={() => navigate('/films')}
           >
             <SplitText
               text="Scopri il Catalogo"
