@@ -6,22 +6,31 @@ import './FilmList.css';
 function FilmList() {
     const navigate = useNavigate();
 
-    // 1. Dati dei film: Inizializzato come array vuoto, perché ci aspettiamo una lista
+    // 1. Dati dei film
     const [films, setFilms] = useState([]);
-
-    // 2. Stato di caricamento: Inizializzato a true, perché la richiesta API parte subito
+    // 2. Stato di caricamento
     const [loading, setLoading] = useState(true);
-
-    // 3. Stato di errore: Inizializzato a null, perché non ci sono errori all'inizio
+    // 3. Stato di errore
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        axios.get(import.meta.env.VITE_API_URL + '/films')
+    // Stati per la ricerca
+    const [searchTitle, setSearchTitle] = useState('');
+    const [searchGenre, setSearchGenre] = useState('');
+
+    // Lista generi disponibili per il dropdown
+    const [availableGenres, setAvailableGenres] = useState([]);
+
+    const fetchFilms = () => {
+        setLoading(true);
+        // Costruiamo i parametri di query solo se hanno valore
+        const params = {};
+        if (searchTitle) params.title = searchTitle;
+        if (searchGenre) params.genre = searchGenre;
+
+        axios.get(import.meta.env.VITE_API_URL + '/films', { params })
             .then(response => {
-                const { data: filmArray } = response.data; // Ottiene l'intera LISTA
-                console.log('Films ricevuti:', filmArray);
-                console.log('Primo film:', filmArray[0]);
-                setFilms(filmArray);                      // Imposta l'intera LISTA nello stato
+                const { data: filmArray } = response.data;
+                setFilms(filmArray);
                 setLoading(false);
             })
             .catch(error => {
@@ -29,11 +38,87 @@ function FilmList() {
                 setError(error);
                 setLoading(false);
             });
+    };
+
+    // Caricamento iniziale
+    useEffect(() => {
+        fetchFilms();
+
+        // Carica anche i generi
+        axios.get(import.meta.env.VITE_API_URL + '/genres')
+            .then(response => {
+                setAvailableGenres(response.data.data);
+            })
+            .catch(err => console.error('Errore caricamento generi:', err));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        fetchFilms();
+    };
 
     return (
         <div className="film-list-container">
             <h1 className="film-list-title">Catalogo Film</h1>
+
+            {/* Search Bar */}
+            <div className="search-container" style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+                <form onSubmit={handleSearch} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <input
+                        type="text"
+                        placeholder="Cerca per titolo..."
+                        value={searchTitle}
+                        onChange={(e) => setSearchTitle(e.target.value)}
+                    />
+                    <select
+                        value={searchGenre}
+                        onChange={(e) => setSearchGenre(e.target.value)}
+                        style={{ width: '200px' }}
+                    >
+                        <option value="">Tutti i generi</option>
+                        {availableGenres.map(genre => (
+                            <option key={genre.id} value={genre.name}>
+                                {genre.name}
+                            </option>
+                        ))}
+                    </select>
+                    <button
+                        type="submit"
+                        className="view-details-btn"
+                        style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}
+                    >
+                        Cerca
+                    </button>
+                    {(searchTitle || searchGenre) && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearchTitle('');
+                                setSearchGenre('');
+                                // Necessario un piccolo timeout o chiamare fetchFilms direttamente con params vuoti perché setState è asincrono
+                                // Ma meglio passare params espliciti a fetchFilms se volessimo farlo pulito.
+                                // Per semplicità qui resettiamo e ricarichiamo "alla vecchia" o facciamo un reload sporco, 
+                                // ma meglio fare set e poi fetch nella prossima render o passare argomenti.
+                                // Qui facciamo il reset e triggeriamo manualmente un fetch "pulito"
+                                setLoading(true);
+                                axios.get(import.meta.env.VITE_API_URL + '/films')
+                                    .then(res => {
+                                        setFilms(res.data.data);
+                                        setLoading(false);
+                                        setSearchTitle('');
+                                        setSearchGenre('');
+                                    });
+                            }}
+                            className="view-details-btn"
+                            style={{ backgroundColor: '#666', padding: '0.5rem 1rem' }}
+                        >
+                            Reset
+                        </button>
+                    )}
+                </form>
+            </div>
 
             {loading && (
                 <div className="loading-container">

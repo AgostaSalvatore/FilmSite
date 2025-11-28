@@ -254,3 +254,32 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* Search Inputs Styling */
+.search-container input,
+.search-container select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(82, 39, 255, 0.3);
+    color: #fff;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.search-container input:focus,
+.search-container select:focus {
+    border-color: #FF9FFC;
+    box-shadow: 0 0 15px rgba(82, 39, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.search-container select option {
+    background-color: #1a0030; /* Dark background for options */
+    color: #fff;
+}
+
+.search-container input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}

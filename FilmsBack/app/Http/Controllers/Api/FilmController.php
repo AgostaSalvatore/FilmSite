@@ -9,11 +9,23 @@ use Illuminate\Support\Facades\Storage;
 
 class FilmController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // collect all videogames
-        $films = Film::with('director', 'genres')->get();
+        // collect all films
+        // $films = Film::with('director', 'genres')->get();
+        $query = Film::with('director', 'genres');
 
+        if ($request->has('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->has('genre')) {
+            $query->whereHas('genres', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->genre . '%');
+            });
+        }
+
+        $films = $query->get();
         // Aggiungi l'URL completo per il poster
         $films->each(function ($film) {
             if ($film->poster) {
