@@ -6,6 +6,7 @@ import './FilmList.css';
 function FilmList() {
     const navigate = useNavigate();
 
+
     // 1. Dati dei film
     const [films, setFilms] = useState([]);
     // 2. Stato di caricamento
