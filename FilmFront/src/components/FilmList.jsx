@@ -21,17 +21,29 @@ function FilmList() {
     // Lista generi disponibili per il dropdown
     const [availableGenres, setAvailableGenres] = useState([]);
 
-    const fetchFilms = () => {
+    // Stati paginazione
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+
+    const fetchFilms = (page = 1) => {
         setLoading(true);
         // Costruiamo i parametri di query solo se hanno valore
-        const params = {};
+        const params = { page }; // Aggiungi pagina
         if (searchTitle) params.title = searchTitle;
         if (searchGenre) params.genre = searchGenre;
 
         axios.get(import.meta.env.VITE_API_URL + '/films', { params })
             .then(response => {
-                const { data: filmArray } = response.data;
-                setFilms(filmArray);
+                // La struttura Laravel paginate è dentro response.data.data se il controller restituisce response()->json(['data' => $paginated])
+                // Ma noi abbiamo restituito 'data' => $films (che è paginator)
+                // Quindi:
+                // response.data.success (bool)
+                // response.data.data (Oggetto Paginator) -> al suo interno ha .data (array film), .current_page, .last_page
+
+                const paginator = response.data.data;
+                setFilms(paginator.data);
+                setCurrentPage(paginator.current_page);
+                setLastPage(paginator.last_page);
                 setLoading(false);
             })
             .catch(error => {
@@ -43,7 +55,7 @@ function FilmList() {
 
     // Caricamento iniziale
     useEffect(() => {
-        fetchFilms();
+        fetchFilms(1);
 
         // Carica anche i generi
         axios.get(import.meta.env.VITE_API_URL + '/genres')
@@ -57,7 +69,14 @@ function FilmList() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        fetchFilms();
+        fetchFilms(1); // Reset a pagina 1 quando si cerca
+    };
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= lastPage) {
+            fetchFilms(newPage);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     };
 
     return (
@@ -98,19 +117,7 @@ function FilmList() {
                             onClick={() => {
                                 setSearchTitle('');
                                 setSearchGenre('');
-                                // Necessario un piccolo timeout o chiamare fetchFilms direttamente con params vuoti perché setState è asincrono
-                                // Ma meglio passare params espliciti a fetchFilms se volessimo farlo pulito.
-                                // Per semplicità qui resettiamo e ricarichiamo "alla vecchia" o facciamo un reload sporco, 
-                                // ma meglio fare set e poi fetch nella prossima render o passare argomenti.
-                                // Qui facciamo il reset e triggeriamo manualmente un fetch "pulito"
-                                setLoading(true);
-                                axios.get(import.meta.env.VITE_API_URL + '/films')
-                                    .then(res => {
-                                        setFilms(res.data.data);
-                                        setLoading(false);
-                                        setSearchTitle('');
-                                        setSearchGenre('');
-                                    });
+                                fetchFilms(1); // Reset e ricarica
                             }}
                             className="view-details-btn"
                             style={{ backgroundColor: '#666', padding: '0.5rem 1rem' }}
@@ -135,67 +142,92 @@ function FilmList() {
             )}
 
             {films.length > 0 && (
-                <div className="films-grid">
-                    {films.map(film => (
-                        <div key={film.id} className="film-card">
-                            <div className="film-card-image">
-                                <img
-                                    src={film.poster_url || `https://picsum.photos/seed/${film.id}/400/600`}
-                                    alt={film.title}
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'flex';
-                                    }}
-                                />
-                                <div className="film-placeholder" style={{ display: 'none' }}>
-                                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                        <rect x="2" y="3" width="20" height="18" rx="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <path d="M14.5 14l-3.5-3.5-5 5" />
-                                        <path d="M21 15l-3.5-3.5L14 15" />
-                                    </svg>
-                                    <span>Nessuna immagine</span>
-                                </div>
-                                <span className="film-year-badge">{new Date(film.release_date).getFullYear()}</span>
-                            </div>
-
-                            <div className="film-card-inner">
-                                <div className="film-card-header">
-                                    <h2 className="film-title">{film.title}</h2>
+                <>
+                    <div className="films-grid">
+                        {films.map(film => (
+                            <div key={film.id} className="film-card">
+                                <div className="film-card-image">
+                                    <img
+                                        src={film.poster_url || `https://picsum.photos/seed/${film.id}/400/600`}
+                                        alt={film.title}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.style.display = 'none';
+                                            e.target.nextSibling.style.display = 'flex';
+                                        }}
+                                    />
+                                    <div className="film-placeholder" style={{ display: 'none' }}>
+                                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                            <rect x="2" y="3" width="20" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <path d="M14.5 14l-3.5-3.5-5 5" />
+                                            <path d="M21 15l-3.5-3.5L14 15" />
+                                        </svg>
+                                        <span>Nessuna immagine</span>
+                                    </div>
+                                    <span className="film-year-badge">{new Date(film.release_date).getFullYear()}</span>
                                 </div>
 
-                                <div className="film-card-body">
-                                    <p className="film-director">
-                                        <span className="label">Regia:</span> {film.director?.name || 'N/D'}
-                                    </p>
-                                    {film.genres && film.genres.length > 0 && (
-                                        <div className="film-genres">
-                                            <span className="label">Generi:</span>
-                                            <div className="genres-list">
-                                                {film.genres.map(genre => (
-                                                    <span key={genre.id} className="genre-badge">{genre.name}</span>
-                                                ))}
+                                <div className="film-card-inner">
+                                    <div className="film-card-header">
+                                        <h2 className="film-title">{film.title}</h2>
+                                    </div>
+
+                                    <div className="film-card-body">
+                                        <p className="film-director">
+                                            <span className="label">Regia:</span> {film.director?.name || 'N/D'}
+                                        </p>
+                                        {film.genres && film.genres.length > 0 && (
+                                            <div className="film-genres">
+                                                <span className="label">Generi:</span>
+                                                <div className="genres-list">
+                                                    {film.genres.map(genre => (
+                                                        <span key={genre.id} className="genre-badge">{genre.name}</span>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                    <p className="film-rating">
-                                        <span className="label">Rating:</span> ⭐ {film.rating}/10
-                                    </p>
-                                </div>
+                                        )}
+                                        <p className="film-rating">
+                                            <span className="label">Rating:</span> ⭐ {film.rating}/10
+                                        </p>
+                                    </div>
 
-                                <div className="film-card-footer">
-                                    <button
-                                        className="view-details-btn"
-                                        onClick={() => navigate(`/films/${film.id}`)}
-                                    >
-                                        Vedi Dettagli
-                                    </button>
+                                    <div className="film-card-footer">
+                                        <button
+                                            className="view-details-btn"
+                                            onClick={() => navigate(`/films/${film.id}`)}
+                                        >
+                                            Vedi Dettagli
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+
+                    {/* Paginazione */}
+                    <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '3rem' }}>
+                        <button
+                            className="view-details-btn"
+                            style={{ width: 'auto', opacity: currentPage === 1 ? 0.5 : 1, cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            Precedente
+                        </button>
+                        <span style={{ color: '#fff', alignSelf: 'center' }}>
+                            Pagina {currentPage} di {lastPage}
+                        </span>
+                        <button
+                            className="view-details-btn"
+                            style={{ width: 'auto', opacity: currentPage === lastPage ? 0.5 : 1, cursor: currentPage === lastPage ? 'not-allowed' : 'pointer' }}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === lastPage}
+                        >
+                            Successivo
+                        </button>
+                    </div>
+                </>
             )}
         </div>
     );

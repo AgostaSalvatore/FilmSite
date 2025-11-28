@@ -15,9 +15,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            DirectorsSeeder::class,
-            GenresSeeder::class,
-            FilmsSeeder::class,
+            // DirectorsSeeder::class,
+            // GenresSeeder::class,
+            // FilmsSeeder::class,
+            TmdbSeeder::class,  // Importazione da TMDB
         ]);
     }
 }

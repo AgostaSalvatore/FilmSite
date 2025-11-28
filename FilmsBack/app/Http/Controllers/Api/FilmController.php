@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Director;
 use App\Models\Film;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,8 +13,7 @@ class FilmController extends Controller
 {
     public function index(Request $request)
     {
-        // collect all films
-        // $films = Film::with('director', 'genres')->get();
+        // 1. Costruzione Query
         $query = Film::with('director', 'genres');
 
         if ($request->has('title')) {
@@ -25,12 +26,20 @@ class FilmController extends Controller
             });
         }
 
-        $films = $query->get();
-        // Aggiungi l'URL completo per il poster
-        $films->each(function ($film) {
+        // 2. Paginazione (16 per pagina)
+        $films = $query->orderBy('created_at', 'desc')->paginate(16);
+
+        // 3. Arricchimento dati (Poster)
+        $films->getCollection()->transform(function ($film) {
             if ($film->poster) {
-                $film->poster_url = url('storage/' . $film->poster);
+                // Se inizia con http, è un URL esterno (TMDB), altrimenti è locale
+                if (str_starts_with($film->poster, 'http')) {
+                    $film->poster_url = $film->poster;
+                } else {
+                    $film->poster_url = url('storage/' . $film->poster);
+                }
             }
+            return $film;
         });
 
         return response()->json([
@@ -45,7 +54,11 @@ class FilmController extends Controller
 
         // Aggiungi l'URL completo per il poster
         if ($film->poster) {
-            $film->poster_url = url('storage/' . $film->poster);
+            if (str_starts_with($film->poster, 'http')) {
+                $film->poster_url = $film->poster;
+            } else {
+                $film->poster_url = url('storage/' . $film->poster);
+            }
         }
 
         return response()->json([
